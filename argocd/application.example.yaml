@@ -1,0 +1,33 @@
+# ============================================================
+# Status: PLANNED / NOT YET DEPLOYED
+#
+# Backend 안정화 이후 Argo CD 기반 GitOps CD 구축 예정
+# ============================================================
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: ai-travel-backend
+  namespace: argocd
+
+spec:
+  project: default
+
+  source:
+    # 실제 GitOps Repository 생성 후 변경
+    repoURL: "<GITOPS_REPOSITORY_URL>"
+
+    targetRevision: main
+
+    # Kubernetes Manifest 위치
+    path: k8s
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: travel
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
