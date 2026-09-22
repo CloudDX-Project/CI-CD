@@ -28,7 +28,7 @@ spec:
       containers:
         - name: travel-worker
 
-          image: 782913119640.dkr.ecr.ap-northeast-2.amazonaws.com/ai-travel-backend:schedule-gap-fix-v3-20260921
+          image: 782913119640.dkr.ecr.ap-northeast-2.amazonaws.com/ai-travel-backend:7a0923b2e7e071b5b7ea543c7612e8ed16fbcdb8
           imagePullPolicy: Always
 
           env:
