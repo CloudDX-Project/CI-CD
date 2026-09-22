@@ -1,33 +1,42 @@
 # ============================================================
-# Status: PLANNED / NOT YET DEPLOYED
+# AI Travel Planner - Argo CD Application
 #
-# Backend 안정화 이후 Argo CD 기반 GitOps CD 구축 예정
+# GitOps Repository의 Kubernetes Manifest를 기준으로
+# Amazon EKS의 Backend Application을 관리한다.
+#
+# Deployment Strategy:
+#   GitOps Repository
+#     -> Argo CD
+#     -> Manual Sync
+#     -> Amazon EKS Rolling Update
+#
+# Auto Sync는 사용하지 않고,
+# 배포 전 Diff 확인 후 Manual Sync 방식으로 운영한다.
 # ============================================================
 
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 
 metadata:
-  name: ai-travel-backend
+  name: travel-backend
   namespace: argocd
 
 spec:
   project: default
 
+  # GitOps Repository
   source:
-    # 실제 GitOps Repository 생성 후 변경
-    repoURL: "<GITOPS_REPOSITORY_URL>"
+    repoURL: https://github.com/CloudDX-Project/CI-CD.git
+    targetRevision: HEAD
+    path: gitops/backend
 
-    targetRevision: main
-
-    # Kubernetes Manifest 위치
-    path: k8s
-
+  # Argo CD가 설치된 EKS Cluster
   destination:
     server: https://kubernetes.default.svc
     namespace: travel
 
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+  # Manual Sync
+  #
+  # Auto Sync를 사용하지 않는다.
+  # GitOps Repository 변경 시 OutOfSync 상태를 확인하고
+  # Diff 검토 후 사용자가 직접 Sync한다.
